@@ -1,0 +1,363 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+  font-family: Archivo, 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+overflow: auto !important;
+}
+
+.ag-row-hover {
+  /* putting in !important so it overrides the theme's styling as it hovers the row also */
+  background-color: #dfdfff !important;
+}
+
+legend {
+  float: none !important;
+}
+
+.ag-theme-material .ag-header-cell-label .ag-header-cell-text {
+  height: auto;
+  overflow-wrap: normal;
+  white-space: normal;
+  font-size: 10px!important;
+}
+
+.ag-header-cell-label {
+  justify-content: left;
+}
+div.ag-theme-alpine div.ag-row {
+  font-size: 10px !important;
+}
+.ag-header-cell-text {
+  overflow: visible;
+  text-overflow: normal;
+  white-space: normal;
+}
+.image{
+  margin-top: -107%!important;
+}
+
+.ag-header-cell-label .ag-header-cell-text {
+  white-space: normal !important;
+}
+
+.ag-column-hover {
+  background-color: #dfffdf !important;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  opacity: 1;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.band1 {
+  color: #010101;
+
+}
+
+.appbar29 {
+  background-color: #e7edfb;
+
+}
+
+.css-ymp0t3 {
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-image: none;
+  overflow: hidden;
+  border-radius: 16px;
+  position: relative;
+  z-index: 0;
+  padding: 10px;
+  text-align: center;
+  color: rgb(6, 27, 100);
+  background-color: #FFE7D9 !important;
+}
+
+.css-ymp0t4 {
+
+  background-color: #FFF7CD !important;
+}
+
+.css-ymp0t5 {
+
+  background-color: #D0F2FF !important;
+}
+
+.css-ymp0t6 {
+
+  background-color: #a7f4a6 !important;
+}
+
+.css-ymp0t7 {
+  background-color: rgb(209, 233, 252) !important;
+}
+
+textarea.MuiInputBase-multiline {
+  height: 150px;
+  overflow: hidden;
+}
+
+.fvdetaileddescriptionRequired {
+  border: 1px solid #d32f2f;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.makeStyles-containerShift-2 {
+  padding-top: 70px !important;
+}
+
+.ag-cell-value,
+.ag-group-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all !important;
+}
+
+.etable tr td {
+  padding: 15px;
+}
+
+.fvpostbtmview {
+  bottom: 0 !important;
+  width: 100% !important;
+  background: #f5f5f5 !important;
+  padding: 15px 0px 15px;
+  z-index: 1;
+  box-shadow: 0px -5px 5px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
+}
+
+.hide {
+  opacity: .2;
+}
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  /* color: #767676; */
+  font-weight: 400;
+  /* background-color: #f7f7f7; */
+}
+
+.services {
+  padding: 5px 0;
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.services h2 {
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  font-size: 48px;
+  line-height: 1.4;
+  text-align: center;
+  font-weight: 700;
+  color: #343434;
+  margin-bottom: 20px;
+}
+
+.services .text-services {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin: 0 auto;
+  margin-bottom: 60px;
+}
+
+.divider {
+  flex-shrink: 0;
+  border-width: 0px 0px medium;
+  border-style: solid solid none;
+  border-color: rgba(0, 0, 0, 0.12) rgba(0, 0, 0, 0.12) currentcolor;
+  background-color: transparent;
+  background-image: linear-gradient(to right, rgba(52, 71, 103, 0), rgba(52, 71, 103, 0.4), rgba(52, 71, 103, 0)) !important;
+  height: 0.12rem !important;
+  margin: 1rem 0px;
+  opacity: 0.25;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 5px;
+  margin-left: 10%;
+}
+
+.icon {
+  display: flex;
+  -moz-box-pack: center;
+  justify-content: center;
+  -moz-box-align: center;
+  align-items: center;
+ /* width: 5rem;
+  height: 5rem;
+   margin-top: -24px; */
+  margin-left: 18%;
+  opacity: 1;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5rem;
+  box-shadow: rgba(0, 0, 0, 0.08) 0rem 0.25rem 1.25rem 0rem;
+}
+
+.card {
+  padding: 1rem;
+}
+.card h3 {
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #343434;
+  margin-top: 10px;
+}
+
+
+@media screen and (max-width: 768px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .services h2 {
+    font-size: 34px;
+    margin-bottom: 5px;
+  }
+
+  .services .text-services {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+    grid-gap: 60px;
+  }
+}
+.Header{
+  display: flex;
+}
+.ag-cell,.ag-header-cell-text{
+  font-size: 14px;
+ }
+body #root .ag-header-cell-text {
+  font-size: 14px!important;
+}
+.appbar {
+    background-color: #E7EDFB;  
+}
+body .MuiSvgIcon-root.icon{
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color:blue
+}
+.bordr {
+  margin-left: -16px !important;
+  margin-right: -16px !important;
+}
+.main-container {
+  display: flex;
+}
+
+.left-side {
+  flex: 1;
+}
+
+.right-side {
+  flex: 1;
+  /* margin-left: -15%!important; */
+}
+
+.name {
+  margin-top: 5px!important;
+  margin-left: 9%!important;
+  margin-bottom: 35px!important;
+}
+
+.textfield {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.color{
+  color: #010101;
+}
+.gridappbar .MuiToolbar-regular{
+  background: #fafafa;
+  min-height: 46px !important;
+  
+}
+.gridappbar p{
+  font-size: 13px;
+}
+.n_btn{
+  font-size: 12px; 
+}
+.n_btn .icon {
+  margin-left: 0px;
+}
+.dlabel {
+  margin-left: 1%;
+  font-size: 16px;
+  position: absolute;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  z-index: 100;
+  background: #fff;
+  padding: 0 7px;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+.dlabel{
+  font-weight: 500 !important;
+}
