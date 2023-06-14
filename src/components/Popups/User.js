@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Snackbar,
   Stack,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -15,20 +13,43 @@ import { Formik, Form } from "formik";
 import MyTextField from "../Components/Textfield";
 import { UserSchema } from "../Constants/Validation";
 import MyAutocomplete from "../Components/AutoComplete";
+import { liveApi } from "../../service/Service";
 const User = ({ open, Close }) => {
+  const [Roles, setRoles] = useState([]);
+  const liveapi = liveApi();
+  
   const initialValues = {
     name: "",
     mobile: "",
     Role: null,
   };
-  const options = [
-    { role: 'Admin', label: 'Admin' },
-    { role: 'User', label: 'User' },
-  ];
   
-  const handleSubmit = (values) => {
-    console.log(values);
+  const options = [
+    { role: "Admin", label: "Admin" },
+    { role: "User", label: "User" },
+  ];
+
+  const Userdetails = () => {
+    // Fetch user roles from API
+    liveapi
+      .get("/school-app/users/list-user-roles")
+      .then((res) => {
+        setRoles(res.data.data);
+      })
+      .catch((err) => {
+        console.log("req error", err);
+      });
   };
+
+  useEffect(() => {
+    // Load user roles on component mount
+    Userdetails();
+  }, []);
+
+  const handleSubmit = (values) => {
+    // Handle form submission
+  };
+
   return (
     <>
       <Dialog
@@ -62,19 +83,22 @@ const User = ({ open, Close }) => {
               <div>
                 &nbsp;
                 <div style={{ width: "500px" }}>
-                  <MyTextField name="name" label="Name" />
+                  {/* Text field for name */}
+                  <MyTextField name="name" label="Name" size="large" />
                 </div>
                 <br />
                 <div style={{ width: "500px" }}>
-                  <MyTextField name="mobile" label="Mobile" />
+                  {/* Text field for mobile */}
+                  <MyTextField name="mobile" label="Mobile" size="large" />
                 </div>
                 <br />
                 <div style={{ width: "500px" }}>
+                  {/* Autocomplete input for role */}
                   <MyAutocomplete
                     name="Role"
                     label="Role"
-                    options={options}
-                    getOptionLabel={(option) => option.label}
+                    options={Roles}
+                    getOptionLabel={(option) => option.title}
                   />
                 </div>
                 <br />
@@ -84,9 +108,11 @@ const User = ({ open, Close }) => {
                   justifyContent="flex-end"
                   style={{ padding: 10, right: "0%" }}
                 >
+                  {/* Close button */}
                   <Button onClick={Close} variant="outlined" color="primary">
                     Close
                   </Button>
+                  {/* Submit button */}
                   <Button type="submit" variant="contained" color="primary">
                     Submit
                   </Button>
@@ -101,4 +127,4 @@ const User = ({ open, Close }) => {
   );
 };
 
-export default User;
+export default React.memo(User);

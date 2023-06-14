@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import { getApi, liveApi } from '../../service/Service';
+import { getApi, liveApi } from "../../service/Service";
 import { IconButton, Button } from "@material-ui/core";
 import { createStyles, Theme } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Alert,Snackbar} from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import Alertpopup from "./Alert";
 const DocumentUploader = ({ title, onVideoUploaded }) => {
   const fileChoose1 = useRef(null);
@@ -16,18 +16,21 @@ const DocumentUploader = ({ title, onVideoUploaded }) => {
   const api = liveApi();
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = useState(false);
-  const [popupdata, setPopupdata] = useState(" Invalid file format. Only “.pdf” formats allowed for the following files: "+fileErrors.join(", ")+".");
+  const [popupdata, setPopupdata] = useState(
+    " Invalid file format. Only “pdf and images” formats allowed"
+  );
   const [popupdata1, setPopupdata1] = useState();
   const handleClose = () => {
     setOpen(false);
     setPopupdata1();
+    setFileErrors([]);
   };
-  const allow = props => {
+  const allow = () => {
     setOpen(false);
-    Delete();
     setPopupdata1();
+    setFileErrors([]);
   };
-  const useStyles = makeStyles((theme) =>
+  const useStyles = makeStyles(() =>
     createStyles({
       fabProgress: {
         color: green[500],
@@ -43,44 +46,45 @@ const DocumentUploader = ({ title, onVideoUploaded }) => {
     })
   );
   const classes = useStyles();
-  
+
   const onFileChoose = async () => {
     setLoading(true);
     setStage("uploading");
-    
+
     if (fileChoose1.current?.files) {
       const files = Array.from(fileChoose1.current.files);
       const errors = [];
 
       for (const file of files) {
         const fileType = file.type;
-        
-        if (fileType !== "application/pdf" && fileType !== ".pdf") {
-
-        try {
-          let data = await uploadImage(file);
-          if (data !== null && data.media_id) {
-            onVideoUploaded({
-              media_id: data.media_id,
-              media_key: data.media_key,
-            });
-          }
-        } 
-        catch (err) {
-          console.log(err);
+        if (
+          fileType !== "application/pdf" &&
+          fileType !== "image/jpeg" &&
+          fileType !== "image/png"
+        ) {
           errors.push(file.name);
-          continue;
+        } else {
+          try {
+            let data = await uploadImage(file);
+            if (data !== null && data.media_id) {
+              onVideoUploaded({
+                media_id: data.media_id,
+                media_key: data.media_key,
+              });
+            }
+          } catch (err) {
+            console.log(err);
+            errors.push(file.name);
+          }
         }
       }
 
-      }
-      
       setLoading(false);
       setFileErrors(errors);
       setStage("uploaded");
     }
   };
-  
+
   const uploadImage = async (file) => {
     return new Promise(async (resolve, reject) => {
       api
@@ -96,7 +100,6 @@ const DocumentUploader = ({ title, onVideoUploaded }) => {
           const xhr = new XMLHttpRequest();
           xhr.open("POST", res.data.data.url, true);
           xhr.onload = function () {
-            console.log(this.status);
             if (this.status === 204) {
               setSuccess(true);
               setTimeout(() => setSuccess(false), 3000);
@@ -105,8 +108,7 @@ const DocumentUploader = ({ title, onVideoUploaded }) => {
               reject(null);
             }
           };
-          xhr.upload.onprogress = function (evt) {
-          };
+          xhr.upload.onprogress = function (evt) {};
           xhr.send(formData);
         })
         .catch((err) => {
@@ -127,44 +129,33 @@ const DocumentUploader = ({ title, onVideoUploaded }) => {
                   onClick={() => fileChoose1.current?.click()}
                   className="iIHpkQ"
                   variant="contained"
-                  color="primary"
+                  color="secondry"
                   component="span"
                 >
                   Attach
                   <AttachFileIcon />
-                 
-                    {loading && (
-                      <CircularProgress
-                        size={24}
-                        style={{marginTop:"15px"}}
-                        className={classes.fabProgress}
-                      />
-                    )}
+                  {loading && (
+                    <CircularProgress
+                      size={24}
+                      style={{ marginTop: "15px" }}
+                      className={classes.fabProgress}
+                    />
+                  )}
                 </Button>
               </td>
-             
             </tr>
           </table>
         </div>
       </div>
-      
-      {fileErrors.length > 0 && (
-          <Snackbar open={fileErrors.length > 0} >
-            <Alert severity="warning" onClose={()=>setFileErrors([])}>
-            Invalid file format. Only “.pdf” formats allowed for the following files: {fileErrors.join(", ")}.
-            </Alert>
-          </Snackbar>
-         
-      )}
-      
       <div className="ion-text-right" slot="end">
         <div style={{ visibility: "hidden", opacity: 0 }}>
           <input
             type="file"
             ref={fileChoose1}
-               onChange={onFileChoose}
-               accept=".pdf " 
-               />
+            onChange={onFileChoose}
+            accept=".pdf, image/*"
+            capture="camera"
+          />
         </div>
         <Alertpopup
           open={fileErrors.length > 0}
@@ -175,8 +166,7 @@ const DocumentUploader = ({ title, onVideoUploaded }) => {
         />
       </div>
     </>
-    
-    );
-  };
+  );
+};
 
-  export default DocumentUploader
+export default DocumentUploader;

@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+// Formik hooks
+import { Formik, Form } from "formik";
+// Mui components
 import {
   Alert,
   Button,
@@ -12,111 +16,130 @@ import {
   Tooltip,
   IconButton,
 } from "@mui/material";
-import MyTextField from "../Components/Textfield";
-import { Formik, Form, useFormikContext, FormikContext } from "formik";
-import { SAVE_SUCCESS, TIME_OUT, FAILURE } from "../Constants/Contant";
-import { VehicleSchema, VehicleinitialValues } from "../Constants/Validation";
-import { liveApi } from "../../service/Service";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { useHistory, useParams } from "react-router-dom";
-import Fileuploader from "../Components/FIleupload";
+// Mui icons
 import DeleteIcon from "@material-ui/icons/Delete";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
-
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+// Custom hooks
+import MyTextField from "../Components/Textfield";
+import Fileuploader from "../Components/FIleupload";
+// Constants
+import { SAVE_SUCCESS, TIME_OUT, FAILURE } from "../Constants/Contant";
+//Validation Schemas
+import { VehicleSchema, VehicleinitialValues } from "../Constants/Validation";
+// Axios hook
+import { liveApi } from "../../service/Service";
+// S3 State
 const defaultS3Data = {
   media_id: "",
   media_key: "",
 };
-import FileUploadComponent from "../Components/FIleupload";
+/*Function Initialization */
 const Vehicle = () => {
   const history = useHistory();
   const liveapi = liveApi();
   const editid = useParams();
-  const [Access,setAccess]=useState(false)
+  // Reinitialize the formik values
+  const [Access, setAccess] = useState(false);
+  // File upload states
   const [attachment, setAttachment] = useState(defaultS3Data);
   const [attachment1, setAttachment1] = useState(defaultS3Data);
   const [attachment2, setAttachment2] = useState(defaultS3Data);
   const [attachment3, setAttachment3] = useState(defaultS3Data);
   const [attachment4, setAttachment4] = useState(defaultS3Data);
+  // Snackbar states
   const [success, setSuccess] = useState("");
+  const [err, seterr] = useState("");
   const [failure, setFailure] = useState("");
+  // Vehicle state
   const [Vehicledata, setVehicledata] = useState(VehicleinitialValues);
+  // SUbmit function
   const handleSubmit = (values) => {
     values.asset_attributes.Attachment = attachment.media_key;
     values.asset_attributes.Attachment1 = attachment1.media_key;
     values.asset_attributes.Attachment2 = attachment2.media_key;
     values.asset_attributes.Attachment3 = attachment3.media_key;
     values.asset_attributes.Attachment4 = attachment4.media_key;
-    {editid?
-   
-      
-      liveapi
-      .post("/school-app/assets/update-asset/"+Number(editid.editid), values)
-      .then((res) => {
-        if (res.data.success) {
-          setSuccess(SAVE_SUCCESS);
-          setTimeout(() => {
-            setSuccess("");
-            history.push("/assets/list");
-          }, TIME_OUT);
-        } else {
-          setFailure(FAILURE);
-          setTimeout(() => {
-            setFailure("");
-          }, TIME_OUT);
-        }
-      })
-      .catch((err) => {
-        console.log("error", err);
-      }):
-      liveapi
-      .post("/school-app/assets/create-asset", values)
-      .then((res) => {
-        if (res.data.success) {
-          setSuccess(SAVE_SUCCESS);
-          setTimeout(() => {
-            setSuccess("");
-            history.push("/assets/list");
-          }, TIME_OUT);
-        } else {
-          setFailure(FAILURE);
-          setTimeout(() => {
-            setFailure("");
-          }, TIME_OUT);
-        }
-      })
-      .catch((err) => {
-        console.log("error", err);
-      })
-    
+    {
+      editid.editid
+        ? liveapi
+            .post(
+              "/school-app/assets/update-asset/" + Number(editid.editid),
+              values
+            )
+            .then((res) => {
+              if (res.data.success) {
+                setSuccess(SAVE_SUCCESS);
+                setTimeout(() => {
+                  setSuccess("");
+                  history.push("/assets/list");
+                }, TIME_OUT);
+              } else {
+                setFailure(FAILURE);
+                setTimeout(() => {
+                  setFailure("");
+                }, TIME_OUT);
+              }
+            })
+            .catch((err) => {
+              console.log("error", err);
+            })
+        : liveapi
+            .post("/school-app/assets/create-asset", values)
+            .then((res) => {
+              if (res.data.success) {
+                setSuccess(SAVE_SUCCESS);
+                setTimeout(() => {
+                  setSuccess("");
+                  history.push("/assets/list");
+                }, TIME_OUT);
+              } else {
+                setFailure(FAILURE);
+                setTimeout(() => {
+                  setFailure("");
+                }, TIME_OUT);
+              }
+            })
+            .catch((err) => {
+              console.log("error", err);
+            });
     }
   };
+  // Navigation properties Update
   useEffect(() => {
-    if (editid!==undefined) {
-      console.log(editid);
+    if (editid !== undefined) {
       UpdateVehicle(editid);
     }
   }, [editid]);
+  // Update vehicle
   const UpdateVehicle = (id) => {
     liveapi
-      .get("/school-app/assets/")
+      .get("/school-app/assets/?asset_type=Vehicle&results_per_page=1000")
       .then((res) => {
         const updatedata = res.data.results.find(
           (o) => o.ipss_asset_id === Number(id.editid)
         );
         setVehicledata(updatedata);
-        setAccess(true)
-        setAttachment({ media_key: updatedata.asset_attributes.Attachment });
-        setAttachment1({ media_key: updatedata.asset_attributes.Attachment1 });
-        setAttachment2({ media_key: updatedata.asset_attributes.Attachment2 });
-        setAttachment3({ media_key: updatedata.asset_attributes.Attachment3 });
-        setAttachment4({ media_key: updatedata.asset_attributes.Attachment4 });
+        setAccess(true);
+        setAttachment({ media_key: updatedata?.asset_attributes?.Attachment });
+        setAttachment1({
+          media_key: updatedata?.asset_attributes?.Attachment1,
+        });
+        setAttachment2({
+          media_key: updatedata?.asset_attributes?.Attachment2,
+        });
+        setAttachment3({
+          media_key: updatedata?.asset_attributes?.Attachment3,
+        });
+        setAttachment4({
+          media_key: updatedata?.asset_attributes?.Attachment4,
+        });
       })
       .catch((err) => {
         console.log("req error", err);
       });
   };
-
+  // File uploader Delete states
   const DeleteAbstract = () => {
     setAttachment(defaultS3Data);
   };
@@ -132,14 +155,27 @@ const Vehicle = () => {
   const DeleteAbstract4 = () => {
     setAttachment4(defaultS3Data);
   };
-
+  // sidebar menu icon
+  var element = document.querySelectorAll('style[data-meta="MuiAppBar"]');
+  if (element) {
+    if (element.length > 1) {
+      element[0].parentNode.removeChild(element[1]);
+    }
+  }
+  // Formik Err Handle function
+  const Vehiclenovalidate = (props) => {
+    seterr(props);
+  };
   return (
     <div style={{ margin: "0 8vh" }}>
       <br />
+      {/* Appbar */}
       <AppBar position="static" class="appbar">
         <Toolbar>
           <Box display="flex" flexGrow={1}>
-            <Typography variant="h6">Vehicle</Typography>
+            <Typography variant="h6">
+              {editid.editid ? "Update" : "Add"} Vehicle
+            </Typography>
           </Box>
           <Grid align="right">
             <div class="tooltip">
@@ -157,26 +193,35 @@ const Vehicle = () => {
       </AppBar>
       <br />
       <Formik
-        initialValues={Vehicledata|| VehicleinitialValues}
-        enableReinitialize={Access} // Enable reinitialization when Vehicledata changes
-        onSubmit={handleSubmit}
-        validationSchema={VehicleSchema}
+        initialValues={Vehicledata || VehicleinitialValues} // Initial values for the formik form
+        enableReinitialize={Access} // Enable reinitialization of form values
+        onSubmit={handleSubmit} // Handle form submission
+        validationSchema={VehicleSchema} // Validation schema for form validation
       >
         <Form>
           <div style={{ margin: "0vh" }}>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {/* Column 1 */}
               <div style={{ width: "400px" }}>
                 <div class="main-container">
+                  {/* Left side */}
                   <div class="left-side">
                     <Typography className="name">Vehicle Reg No :</Typography>
+                    {err && <br />}
                     <Typography className="name">Vehicle Mfr :</Typography>
                     <Typography className="name">Engine No :</Typography>
                     <Typography className="name">Chassis No :</Typography>
                     <Typography className="name">RC No :</Typography>
                     <Typography className="name">FC No :</Typography>
+                    <Typography className="name">Tax Recepit No:</Typography>
+                    <Typography className="name">Permit No:</Typography>
                   </div>
+                  {/* Right side */}
                   <div class="right-side">
-                    <MyTextField name="asset_identifier" />
+                    <MyTextField
+                      name="asset_identifier"
+                      formikProps={Vehiclenovalidate}
+                    />
                     <br />
                     <br />
                     <MyTextField name="title" />
@@ -188,14 +233,23 @@ const Vehicle = () => {
                     <MyTextField name="asset_attributes.Chassisno" />
                     <br />
                     <br />
-                    <MyTextField name="asset_attributes.RCno" /> <br />
+                    <MyTextField name="asset_attributes.RCno" />
+                    <br />
                     <br />
                     <MyTextField name="asset_attributes.FCno" />
+                    <br />
+                    <br />
+                    <MyTextField name="asset_attributes.TaxNo" />
+                    <br />
+                    <br />
+                    <MyTextField name="asset_attributes.PermitNo" />
                   </div>
                 </div>
               </div>
+              {/* Column 2 */}
               <div style={{ width: "440px" }}>
                 <div class="main-container">
+                  {/* Left side */}
                   <div class="left-side">
                     <Typography className="name">Seat Capacity :</Typography>
                     <Typography className="name">
@@ -205,8 +259,12 @@ const Vehicle = () => {
                     <Typography className="name">Speed Limit:</Typography>
                     <Typography className="name">Attachments:</Typography>
                   </div>
+                  {/* Right side */}
                   <div class="right-side">
-                    <MyTextField name="asset_attributes.SeatCapacity" />
+                    <MyTextField
+                      name="asset_attributes.SeatCapacity"
+                      need="yes"
+                    />
                     <br />
                     <br />
                     <MyTextField name="asset_attributes.FuelCapacity" />
@@ -215,9 +273,10 @@ const Vehicle = () => {
                     <MyTextField name="asset_attributes.FuelType" />
                     <br />
                     <br />
-                    <MyTextField name="asset_attributes.speed" />
+                    <MyTextField name="over_speed" />
                     <br />
                     <br />
+                    {/* File Upload Fields */}
                     <div
                       style={{ display: "flex", flexWrap: "wrap", gap: "30%" }}
                     >
@@ -238,7 +297,7 @@ const Vehicle = () => {
                                       <FileOpenIcon
                                         style={{
                                           fontSize: 38,
-                                          color: "#a4a4a4",
+                                          color: "#0000FF",
                                         }}
                                       />
                                     </Tooltip>
@@ -268,7 +327,6 @@ const Vehicle = () => {
                           />
                         )}
                       </div>
-
                       <div style={{ width: "50px" }}>
                         {attachment1.media_key ? (
                           <div>
@@ -286,7 +344,7 @@ const Vehicle = () => {
                                       <FileOpenIcon
                                         style={{
                                           fontSize: 38,
-                                          color: "#a4a4a4",
+                                          color: "#0000FF",
                                         }}
                                       />
                                     </Tooltip>
@@ -328,11 +386,14 @@ const Vehicle = () => {
                                       attachment2.media_key
                                     }
                                     target="_blank"
-                                  >                                    <Tooltip title="Preview" arrow>
-
-                                    <FileOpenIcon
-                                      style={{ fontSize: 38, color: "#a4a4a4" }}
-                                    />
+                                  >
+                                    <Tooltip title="Preview" arrow>
+                                      <FileOpenIcon
+                                        style={{
+                                          fontSize: 38,
+                                          color: "#0000FF",
+                                        }}
+                                      />
                                     </Tooltip>
                                   </a>
                                 </td>
@@ -373,11 +434,13 @@ const Vehicle = () => {
                                     }
                                     target="_blank"
                                   >
-                                                                        <Tooltip title="Preview" arrow>
-
-                                    <FileOpenIcon
-                                      style={{ fontSize: 38, color: "#a4a4a4" }}
-                                    />
+                                    <Tooltip title="Preview" arrow>
+                                      <FileOpenIcon
+                                        style={{
+                                          fontSize: 38,
+                                          color: "#0000FF",
+                                        }}
+                                      />
                                     </Tooltip>
                                   </a>
                                 </td>
@@ -418,11 +481,13 @@ const Vehicle = () => {
                                     }
                                     target="_blank"
                                   >
-                                                                        <Tooltip title="Preview" arrow>
-
-                                    <FileOpenIcon
-                                      style={{ fontSize: 38, color: "#a4a4a4" }}
-                                    />
+                                    <Tooltip title="Preview" arrow>
+                                      <FileOpenIcon
+                                        style={{
+                                          fontSize: 38,
+                                          color: "#0000FF",
+                                        }}
+                                      />
                                     </Tooltip>
                                   </a>
                                 </td>
@@ -454,6 +519,7 @@ const Vehicle = () => {
                   </div>
                 </div>
               </div>
+              {/* Column 3 */}
               <div style={{ width: "450px" }}>
                 <div class="main-container">
                   <div class="left-side">
@@ -464,6 +530,10 @@ const Vehicle = () => {
                     </Typography>
                     <Typography className="name">
                       Insurance Valid Upto:
+                    </Typography>
+                    <Typography className="name">Tax Expiry Date:</Typography>
+                    <Typography className="name">
+                      Permit Expiry Date:
                     </Typography>
                   </div>
                   <div class="right-side">
@@ -489,18 +559,26 @@ const Vehicle = () => {
                       name="asset_attributes.Insuexpdate"
                       type="date"
                     />
+                    <br />
+                    <br />
+
+                    <MyTextField
+                      name="asset_attributes.Taxexpirydate"
+                      type="date"
+                    />
+                    <br />
+                    <br />
+                    <MyTextField
+                      name="asset_attributes.Permitexpirydate"
+                      type="date"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={4}
-            padding={2}
-          >
+          {/* Action Buttons */}
+          <Stack direction="row" justifyContent="center" spacing={4}>
             <Button
               variant="outlined"
               color="primary"
@@ -512,11 +590,15 @@ const Vehicle = () => {
               Submit
             </Button>
           </Stack>
+          <br />
         </Form>
       </Formik>
+      {/* Snackbar Actions */}
+      {/* Snackbar for success message */}
       <Snackbar open={Boolean(success)}>
         <Alert severity="success">{success}</Alert>
       </Snackbar>
+      {/* Snackbar for failure message */}
       <Snackbar open={Boolean(failure)}>
         <Alert severity="error">{failure}</Alert>
       </Snackbar>
